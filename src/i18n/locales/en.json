@@ -1,0 +1,20 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "analytics": "Analytics",
+    "learning": "Learning",
+    "community": "Community",
+    "settings": "Settings"
+  },
+  "financial": {
+    "income": "Income",
+    "expenses": "Expenses",
+    "savings": "Savings",
+    "budget": "Budget"
+  }
+}

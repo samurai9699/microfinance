@@ -1,0 +1,20 @@
+{
+  "common": {
+    "loading": "Inapakia...",
+    "error": "Hitilafu imetokea",
+    "retry": "Jaribu tena"
+  },
+  "nav": {
+    "dashboard": "Dashibodi",
+    "analytics": "Uchambuzi",
+    "learning": "Kujifunza",
+    "community": "Jamii",
+    "settings": "Mipangilio"
+  },
+  "financial": {
+    "income": "Mapato",
+    "expenses": "Matumizi",
+    "savings": "Akiba",
+    "budget": "Bajeti"
+  }
+}
