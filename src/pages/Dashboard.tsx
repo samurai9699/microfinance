@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Bell, ChevronDown, Menu, Search, X } from 'lucide-react';
+import { useFinancialHealth } from '../hooks/useFinancialHealth';
+import { useUserStore } from '../store/userStore';
 import Sidebar from '../components/dashboard/Sidebar';
 import FinancialHealthWidget from '../components/dashboard/FinancialHealthWidget';
 import QuickActionsPanel from '../components/dashboard/QuickActionsPanel';
@@ -10,6 +12,8 @@ import FinancialAdvisor from '../components/chat/FinancialAdvisor';
 
 const Dashboard: React.FC = () => {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const healthScore = useFinancialHealth();
+  const { profile } = useUserStore();
   
   // Sample data for learning progress
   const learningProgressData = {
@@ -152,7 +156,9 @@ const Dashboard: React.FC = () => {
           <main className="p-6">
             {/* Welcome Section */}
             <div className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-800">Welcome back, Alex! 👋</h2>
+              <h2 className="text-xl font-semibold text-gray-800">
+                Welcome back, {profile?.name || 'User'}! 👋
+              </h2>
               <p className="text-gray-600">
                 Your financial health is looking good today. Here's what you need to know.
               </p>
@@ -161,7 +167,10 @@ const Dashboard: React.FC = () => {
             {/* Dashboard Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2">
-                <FinancialHealthWidget score={72} previousScore={65} />
+                <FinancialHealthWidget 
+                  score={healthScore?.total || 0} 
+                  previousScore={healthScore ? healthScore.total - 5 : undefined} 
+                />
               </div>
               <div>
                 <QuickActionsPanel />

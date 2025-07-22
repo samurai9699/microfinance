@@ -1,6 +1,7 @@
 import React from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { ArrowUp, ArrowDown } from 'lucide-react';
+import { useAnalytics } from '../../hooks/useAnalytics';
 import Card from '../common/Card';
 
 type ExpenseCategory = {
@@ -11,13 +12,20 @@ type ExpenseCategory = {
 };
 
 const ExpenseBreakdown: React.FC = () => {
-  const data: ExpenseCategory[] = [
-    { name: 'Housing', value: 1200, color: '#2D5830', change: 5 },
-    { name: 'Food', value: 600, color: '#F4A261', change: -2 },
-    { name: 'Transportation', value: 400, color: '#2AB7CA', change: 8 },
-    { name: 'Utilities', value: 300, color: '#FE6B8B', change: 0 },
-    { name: 'Entertainment', value: 200, color: '#4A90E2', change: -5 },
-  ];
+  const analytics = useAnalytics();
+  
+  const colors = ['#2D5830', '#F4A261', '#2AB7CA', '#FE6B8B', '#4A90E2', '#8B5CF6', '#F59E0B'];
+  
+  const data: ExpenseCategory[] = analytics?.expensesByCategory 
+    ? Object.entries(analytics.expensesByCategory).map(([name, value], index) => ({
+        name,
+        value,
+        color: colors[index % colors.length],
+        change: Math.floor(Math.random() * 20) - 10, // Random change for demo
+      }))
+    : [
+        { name: 'No expenses yet', value: 1, color: '#E5E7EB', change: 0 }
+      ];
 
   return (
     <Card className="p-6">

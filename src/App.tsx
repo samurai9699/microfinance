@@ -9,6 +9,9 @@ import BusinessPlanning from './pages/BusinessPlanning';
 import LendingCircle from './pages/LendingCircle';
 import Analytics from './pages/Analytics';
 import Learning from './pages/Learning';
+import Budget from './pages/Budget';
+import Transactions from './pages/Transactions';
+import Community from './pages/Community';
 import LoginForm from './components/auth/LoginForm';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
@@ -22,10 +25,13 @@ function App() {
           <Route path="/onboarding/*" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/budget" element={<ProtectedRoute><Budget /></ProtectedRoute>} />
+          <Route path="/transactions" element={<ProtectedRoute><Transactions /></ProtectedRoute>} />
           <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
           <Route path="/business-planning" element={<ProtectedRoute><BusinessPlanning /></ProtectedRoute>} />
           <Route path="/lending-circles" element={<ProtectedRoute><LendingCircle /></ProtectedRoute>} />
           <Route path="/learning" element={<ProtectedRoute><Learning /></ProtectedRoute>} />
+          <Route path="/community" element={<ProtectedRoute><Community /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to="/\" replace />} />
         </Routes>
       </Router>

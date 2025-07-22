@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Calendar, Filter, TrendingUp, TrendingDown } from 'lucide-react';
+import { useUserStore } from '../../store/userStore';
+import { useAnalytics } from '../../hooks/useAnalytics';
 import Card from '../common/Card';
 import Button from '../common/Button';
 
@@ -13,19 +15,58 @@ type CashFlowData = {
 
 const CashFlowChart: React.FC = () => {
   const [timeframe, setTimeframe] = useState<'week' | 'month' | 'year'>('month');
+  const { financialData } = useUserStore();
+  const analytics = useAnalytics();
   
-  const data: CashFlowData[] = [
-    { date: 'Mar 1', income: 1200, expenses: 800, balance: 400 },
-    { date: 'Mar 5', income: 900, expenses: 600, balance: 300 },
-    { date: 'Mar 10', income: 1500, expenses: 1000, balance: 500 },
-    { date: 'Mar 15', income: 800, expenses: 700, balance: 100 },
-    { date: 'Mar 20', income: 2000, expenses: 1200, balance: 800 },
-    { date: 'Mar 25', income: 1100, expenses: 900, balance: 200 },
-    { date: 'Mar 30', income: 1300, expenses: 1000, balance: 300 },
-  ];
+  // Generate chart data from transactions
+  const generateChartData = (): CashFlowData[] => {
+    if (!financialData?.transactions.length) {
+      return [
+        { date: 'No Data', income: 0, expenses: 0, balance: 0 }
+      ];
+    }
 
-  const totalIncome = data.reduce((sum, item) => sum + item.income, 0);
-  const totalExpenses = data.reduce((sum, item) => sum + item.expenses, 0);
+    const transactions = financialData.transactions;
+    const groupedData: { [key: string]: { income: number; expenses: number } } = {};
+
+    transactions.forEach(transaction => {
+      const date = new Date(transaction.date);
+      let key: string;
+      
+      if (timeframe === 'week') {
+        key = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      } else if (timeframe === 'month') {
+        key = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      } else {
+        key = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+      }
+
+      if (!groupedData[key]) {
+        groupedData[key] = { income: 0, expenses: 0 };
+      }
+
+      if (transaction.type === 'income') {
+        groupedData[key].income += transaction.amount;
+      } else {
+        groupedData[key].expenses += transaction.amount;
+      }
+    });
+
+    return Object.entries(groupedData)
+      .map(([date, data]) => ({
+        date,
+        income: data.income,
+        expenses: data.expenses,
+        balance: data.income - data.expenses,
+      }))
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      .slice(-7); // Show last 7 data points
+  };
+
+  const data = generateChartData();
+
+  const totalIncome = analytics?.totalIncome || 0;
+  const totalExpenses = analytics?.totalExpenses || 0;
   const netCashFlow = totalIncome - totalExpenses;
 
   return (
